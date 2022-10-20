@@ -5,7 +5,7 @@ import "./index.css";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
 const client = new ApolloClient({
-  uri: "https://public3b47822a17c9dda6.stepzen.net/api/newsapp/__graphql",
+  uri: "https://public24edd7795b4430b2.stepzen.net/api/newsapp/__graphql",
   cache: new InMemoryCache(),
 });
 

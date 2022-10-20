@@ -1,5 +1,6 @@
-import { useQuery, gql } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import React, { useState } from "react";
+import { GET_ARTICLES } from '../operations';
 
 import ArticleBlock from "./ArticleBlock";
 
@@ -12,20 +13,6 @@ const listStyle = {
 const listItemStyle = {
   margin: "0 5px",
 };
-
-const GET_ARTICLES = gql`
-  query GetArticles($tag: String) {
-    articles(tag: $tag) {
-      id
-      title
-      description
-      user {
-        username
-      }
-      upvotes
-    }
-  }
-`;
 
 function Home({ filter }) {
   const [page, setPage] = useState(1);

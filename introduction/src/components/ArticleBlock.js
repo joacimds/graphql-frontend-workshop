@@ -1,5 +1,6 @@
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { Link } from "react-router-dom";
+import { GET_ARTICLES, UPVOTE_ARTICLE } from '../operations';
 
 const labelStyle = {
   color: "#333333",
@@ -33,28 +34,22 @@ const moreStyle = {
   marginBottom: "5px",
   textDecoration: "none",
   borderBottom: "1px solid #FF00FF",
-   paddingBottom: "3px"
+  paddingBottom: "3px"
 }
-
-const UPVOTE_ARTICLE = gql`
-  mutation UpvoteArticle($postId: Int!) {
-    upvoteArticle(postId: $postId) {
-      id
-    }
-  }
-`;
 
 function ArticleBlock({ id, title, description, user, upvotes, index }) {
   const [upvoteArticle, { data, loading, error }] = useMutation(
     UPVOTE_ARTICLE,
     {
       variables: { postId: id },
+      refetchQueries: [{ query: GET_ARTICLES}],
     }
   );
 
   return (
     <li key={id} style={listItemStyle}>
       <h2>
+        <span style={labelStyle}>{index + 1}.</span>
         <Link style={titleStyle} to={`articles/${id}`}>
           {title}
         </Link>
@@ -78,6 +73,7 @@ function ArticleBlock({ id, title, description, user, upvotes, index }) {
         
         <span style={labelStyle}>{error && `Error! ${error.message}`}</span>
         <span style={labelStyle}>{data?.upvoteArticle?.id && "Upvoted!"}</span>
+
         <p style={{fontSize: 12, float: "right"}}>Posted by:<span style={{ paddingLeft: 5, ...labelStyle }}>{user.username}</span></p>
         
       </p>
