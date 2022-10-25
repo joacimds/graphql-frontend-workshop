@@ -1,7 +1,5 @@
-import { useQuery } from "@apollo/client";
-import React from "react";
+import React, { useEffect, useState } from 'react';
 import { useParams } from "react-router-dom";
-import { GET_ARTICLE } from '../operations';
 
 const articleStyle = {
   margin: 0,
@@ -9,20 +7,32 @@ const articleStyle = {
 };
 
 function Article() {
+  const [article, setArticle] = useState({});
   let params = useParams();
 
-  const { loading, error, data } = useQuery(GET_ARTICLE, {
-    variables: { id: params.id },
-  });
+  useEffect(() => {
+    async function fetchArticleById(id) {
+      try {
+        const data = await fetch(`https://dev.to/api/articles/${id}`);
+        const result = await data.json();
 
-  if (loading) return "Loading...";
-  if (error) return `Error! ${error.message}`;
+        if (result) {
+          setArticle(result);
+        }
+      } catch (e) {
+        console.log('Error', e.message);
+      }
+    }
+    if (!article.id && params.id) {
+      fetchArticleById(params.id);
+    }
+  }, [params.id, article]);
 
   return (
     <div style={articleStyle}>
-      {!data.article.id === 0 ? <p>...</p> : null}
-      <h2>{data.article.title}</h2>
-      <div dangerouslySetInnerHTML={{ __html: data.article.body_html }} />
+      {!article.id === 0 ? <p>...</p> : null}
+      <h2>{article.title}</h2>
+      <div dangerouslySetInnerHTML={{ __html: article.body_html }} />
     </div>
   );
 }

@@ -1,8 +1,6 @@
-import { useQuery } from "@apollo/client";
-import React, { useState } from "react";
-import { GET_ARTICLES } from '../operations';
+import React, { useEffect, useState } from "react";
+import { Link } from 'react-router-dom';
 
-import ArticleBlock from "./ArticleBlock";
 
 const listStyle = {
   listStyle: "none",
@@ -11,31 +9,79 @@ const listStyle = {
 };
 
 const listItemStyle = {
-  margin: "0 5px",
+  margin: "28px 0px",
+  padding: "5px 40px",
+  background: "#E4E1DB"
 };
 
-function Home({ filter }) {
-  const [page, setPage] = useState(1);
-  const { loading, error, data } = useQuery(GET_ARTICLES, {
-    variables: { tag: filter },
-  });
+const labelStyle = {
+  color: "#333333",
+  paddingRight: 5,
+};
 
-  if (loading) return "Loading...";
-  if (error) return `Error! ${error.message}`;
+const titleStyle = {
+  textDecoration: "none",
+  color: "#333",
+}
+
+const moreStyle = {
+  color: "#333",
+  marginBottom: "5px",
+  textDecoration: "none",
+  borderBottom: "1px solid #FF00FF",
+  paddingBottom: "3px"
+}
+
+function Home({ filter }) {
+  const [articles, setArticles] = useState([]);
+
+  // Reset articles when filter changes
+  useEffect(() => {
+    if (filter) setArticles([]);
+  }, [filter]);
+
+  // Fetch articles
+  useEffect(() => {
+    const fetchArticles = async (filter = '') => {
+      try {
+        const data = await fetch(
+          `https://dev.to/api/articles${filter ? `?tag=${filter}` : ''}`,
+        );
+        const result = await data.json();
+
+        if (result) {
+          setArticles(result);
+        }
+      } catch (e) {
+        console.log('Error', e.message);
+      }
+    };
+
+    if (!articles.length) {
+      fetchArticles(filter);
+    }
+  }, [articles, filter]);
 
   return (
     <>
       <ul style={listStyle}>
-        {data.articles.length === 0 ? <li style={listItemStyle}>...</li> : null}
-        {data.articles.map((article, index) => (
-          <ArticleBlock key={article.id} index={index} {...article} />
+        {articles.length === 0 ? <li style={listItemStyle}>...</li> : null}
+        {articles.map(({id, title, description, user}, index) => (
+          <li key={id} style={listItemStyle}>
+          <h2>
+            <span style={labelStyle}>{index + 1}.</span>
+            <Link style={titleStyle} to={`articles/${id}`}>
+              {title}
+            </Link>
+          </h2>
+          
+          {description}
+          <br></br><br></br>
+          <Link to={`/articles/${id}`} style={moreStyle}>Les mer</Link>
+          <br></br><br></br>
+        </li>
         ))}
       </ul>
-      <div>
-        <button type="button" onClick={() => setPage(page + 1)}>
-          Next page
-        </button>
-      </div>
     </>
   );
 }
