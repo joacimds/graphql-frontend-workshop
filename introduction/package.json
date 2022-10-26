@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@apollo/client": "^3.7.0",
     "graphql": "^16.6.0",
     "history": "5.1.0",
     "json-server": "0.17.0",

@@ -19,6 +19,13 @@ const labelStyle = {
   paddingRight: 5,
 };
 
+const userLabelStyle = {
+  color: "#333333",
+  paddingRight: 5,
+  fontSize: 16,
+  fontStyle: "italic"
+};
+
 const titleStyle = {
   textDecoration: "none",
   color: "#333",
@@ -73,6 +80,10 @@ function Home({ filter }) {
             <Link style={titleStyle} to={`articles/${id}`}>
               {title}
             </Link>
+
+            <span style={{ paddingLeft: 5, ...userLabelStyle }}>
+            ({user.username})
+          </span>
           </h2>
           
           {description}
