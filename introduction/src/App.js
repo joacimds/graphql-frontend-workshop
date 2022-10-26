@@ -33,7 +33,7 @@ function App() {
       <div>
         <div style={bodyStyle}>
           <nav style={headerStyle}>
-            <h1>GraphQL Todo List</h1>
+            <h1>Wacky Workshop Article List</h1>
             <Filter filter={filter} setFilter={setFilter} />
           </nav>
 

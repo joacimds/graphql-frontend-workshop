@@ -41,11 +41,17 @@ const moreStyle = {
 
 function Home({ filter }) {
   const [articles, setArticles] = useState([]);
+  const [page, setPage] = useState(1);
 
   // Reset articles when filter changes
   useEffect(() => {
     if (filter) setArticles([]);
   }, [filter]);
+
+  // Reset articles when page changes
+  useEffect(() => {
+    if (page) setArticles([]);
+  }, [page]);
 
   // Fetch articles
   useEffect(() => {
@@ -65,9 +71,9 @@ function Home({ filter }) {
     };
 
     if (!articles.length) {
-      fetchArticles(filter);
+      fetchArticles(filter, page);
     }
-  }, [articles, filter]);
+  }, [articles, filter, page]);
 
   return (
     <>
@@ -93,6 +99,19 @@ function Home({ filter }) {
         </li>
         ))}
       </ul>
+      {page > 1 &&
+        <div>
+          <button type='button' onClick={() => setPage(page - 1)}>
+            Previous page
+          </button>
+        </div>
+      } 
+
+      <div>
+        <button type='button' onClick={() => setPage(page + 1)}>
+          Next page
+        </button>
+      </div>
     </>
   );
 }
